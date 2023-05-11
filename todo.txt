@@ -1,0 +1,33 @@
+DONE 
+
+- function to aggregate to quarterly data 
+
+
+----
+
+DOING 
+
+
+- function to disaggregate to quarterly 
+- insert minimum_wage file-  maintain minimum wage for that year - quarterly basis use ffill 
+
+
+
+----
+
+TO DO
+
+- CREATE except in minimum_wage file-  can't NEVER be divided  as it is constant with time 
+- CREATE except in employment  -  use mean instead of sum
+- CREATE except in  exports/imports -  use sum instead of mean 
+- Develop model to estimate quarterly expenditure and disposable income 
+- create columns in traditional_data table 
+- insert data into the tables 
+- create machine learning models for estimates 
+- feed into power bi 
+
+----
+
+CONSIDERATIONS
+
+

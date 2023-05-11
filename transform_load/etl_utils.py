@@ -1,4 +1,8 @@
 import chardet as ct
+import glob
+import os
+import pandas as pd
+
 
 def detect_delimiter(file_path):
 	"""
@@ -55,7 +59,69 @@ def encoding_detect(data_path):
 
 	encoding = result['encoding']
 
-	print("Encoding detected.")
-
 	return encoding
 
+def get_csv_files(path):
+    """
+    Description: Gets the csv files that are inside a folder.
+    
+    Parameters:
+    
+    path (str): A string containing the path of the data.
+    
+    Returns:
+    
+    csv_files (list): A list containing the path of each csv file.
+    """
+    csv_files = []
+    
+    if os.path.exists(path):
+        
+        if os.path.isdir(path):
+            csv_files = glob.glob(os.path.join(path, "*.csv"))
+            
+            return csv_files
+            
+        else:
+            print("The specified path is not a directory.")
+    else:
+        print("The specified path does not exist.")
+
+
+def transform_to_date(data):
+    
+    date_col = data.columns[0]
+    data[date_col] = pd.to_datetime(data[date_col]) 
+
+    data.set_index(date_col, inplace=True)
+    
+    return data
+
+
+def transform_to_quarterly(data):
+
+    date_col = data.columns[0]
+    frequency = pd.infer_freq(data.index)
+    
+    if frequency == "MS": # MS means Month Start in pandas nomenclature
+        
+        quarterly = data.resample("QS").sum()
+        
+    return quarterly
+
+    
+def check_frequency(data):
+    """
+    Description: checks the frequency of which a time series occurs.
+    
+    Parameters:
+    
+    data (pd.DataFrame): A pandas DataFrame object. 
+    
+    Returns:
+    
+    frequency (str): A string containing the frequency type
+    """
+    
+    ###
+    
