@@ -1,1 +1,5 @@
 All the data was manually extracted from sites as the Bureau of Economic Analysis, Universities and others.
+
+Approachs toa annual data:
+
+- Constant and linear trend in the regression model in first differences
