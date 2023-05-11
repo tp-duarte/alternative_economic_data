@@ -1,0 +1,1 @@
+The consumer sentiment data had it's first row manually taken out in the staging area.

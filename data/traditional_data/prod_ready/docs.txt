@@ -1,8 +1,0 @@
-The following files were manually treated:
-
-- Disposable Income 
-- Personal Income
-- Expenditure 
-
-
-

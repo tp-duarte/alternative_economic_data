@@ -98,30 +98,58 @@ def transform_to_date(data):
     return data
 
 
-def transform_to_quarterly(data):
+def transform_to_quarterly(data, filename):
+    
+    exports = "cali-monthly-exports.csv"
+    imports = "cali-monthly-imports.csv"
+    employment = "cali-monthly-employment.csv"
+    minimum_wage = "cali-annual-minimum_wage.csv"
 
     date_col = data.columns[0]
     frequency = pd.infer_freq(data.index)
     
-    if frequency == "MS": # MS means Month Start in pandas nomenclature
+    if frequency == "MS" and (filename == exports or filename == imports) : # MS means Month Start in pandas nomenclature
         
         quarterly = data.resample("QS").sum()
+    
+    elif frequency == "MS" and filename == employment:
         
+        quarterly = data.resample("QS").mean().round(2)
+    
+    elif frequency == 'AS-JAN' and filename == minimum_wage:
+        
+        quarterly = data.resample("QS").ffill()
+    
     return quarterly
 
     
-def check_frequency(data):
+def get_modified_file_path(file_path, new_file_name):
     """
-    Description: checks the frequency of which a time series occurs.
-    
+    Get the modified file path given the file path and the desired new file name.
+
     Parameters:
-    
-    data (pd.DataFrame): A pandas DataFrame object. 
-    
+        file_path (str): The path of the file.
+        new_file_name (str): The new name to be assigned to the file.
+
     Returns:
-    
-    frequency (str): A string containing the frequency type
+        str: The modified file path with the new file name.
     """
-    
-    ###
-    
+    directory, current_file_name = os.path.split(file_path)
+    new_file_path = os.path.join(directory, new_file_name)
+    return new_file_path
+
+
+def change_directory(file_path, new_directory):
+    """
+    Change the directory of a file while preserving the file name and extension.
+
+    Parameters:
+        file_path (str): The original file path.
+        new_directory (str): The new directory path.
+
+    Returns:
+        str: The modified file path with the same file name and extension in the new directory.
+    """
+    directory, file_name = os.path.split(file_path)
+    new_file_path = os.path.join(new_directory, file_name)
+    return new_file_path

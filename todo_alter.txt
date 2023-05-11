@@ -1,0 +1,14 @@
+DONE
+
+- treat google_trends data
+- treat and query mobility_report 
+
+DOING 
+
+search_1, search_2 - indicate that the search terms were filtered by the california location 
+
+
+TO DO 
+
+
+- make dictionary to map sql_columns that will go in the table insertion 
