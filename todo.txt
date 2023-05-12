@@ -8,7 +8,7 @@ TO DO
 
 - write table variables 
 - recreate tables with primary key in date 
-- insert data into the tables 
+- INSERT data with corresponding date times of the SQL table 
 - create machine learning models for estimates 
 - feed into power bi 
 

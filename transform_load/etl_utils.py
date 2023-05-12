@@ -36,6 +36,7 @@ def detect_delimiter(file_path):
 
 	return best_delimiter
 
+
 def encoding_detect(data_path):
 	"""
 	Description: encoding detection for files
@@ -98,27 +99,46 @@ def transform_to_date(data):
     return data
 
 
-def transform_to_quarterly(data, filename):
+def file_in_list(target_string, string_list):
+    """
+    Description:
+    
+    Parameters:
+    
+    Returns:
+    
+    """
+    
+    for string in string_list:
+        if target_string == string:
+            return True
+    return False
+
+
+
+def transform_to_quarterly(data, file_name):
     
     exports = "cali-monthly-exports.csv"
     imports = "cali-monthly-imports.csv"
     employment = "cali-monthly-employment.csv"
     minimum_wage = "cali-annual-minimum_wage.csv"
+    google_trends = "cali-monthly-google_trends.csv"
+    consumer_sentiment = "us-monthly-consumer_sentiment.csv"
+    mobility_report = "cali-daily-mobility_report.csv"
 
-    date_col = data.columns[0]
+    quarterly_agreggates = [exports, imports] 
+    quarterly_averages = [employment, google_trends, consumer_sentiment, mobility_report] 
+    
     frequency = pd.infer_freq(data.index)
     
-    if frequency == "MS" and (filename == exports or filename == imports) : # MS means Month Start in pandas nomenclature
-        
+    if frequency == "MS" and file_in_list(file_name, quarterly_agreggates) : # 'MS' means Month Start in pandas nomenclature
         quarterly = data.resample("QS").sum()
     
-    elif frequency == "MS" and filename == employment:
-        
-        quarterly = data.resample("QS").mean().round(2)
+    elif (frequency == "MS" or file_name == mobility_report) and file_in_list(file_name, quarterly_averages):
+        quarterly = data.resample("QS").mean()
     
-    elif frequency == 'AS-JAN' and filename == minimum_wage:
-        
-        quarterly = data.resample("QS").ffill()
+    elif frequency == "AS-JAN" and file_name == minimum_wage: # 'AS' means Annual Start and 'JAN' indicates that it starts in january.
+        quarterly = data.resample("QS").ffill()     
     
     return quarterly
 
@@ -134,8 +154,10 @@ def get_modified_file_path(file_path, new_file_name):
     Returns:
         str: The modified file path with the new file name.
     """
+    
     directory, current_file_name = os.path.split(file_path)
     new_file_path = os.path.join(directory, new_file_name)
+    
     return new_file_path
 
 
@@ -152,4 +174,5 @@ def change_directory(file_path, new_directory):
     """
     directory, file_name = os.path.split(file_path)
     new_file_path = os.path.join(new_directory, file_name)
+    
     return new_file_path
