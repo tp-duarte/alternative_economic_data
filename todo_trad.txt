@@ -11,6 +11,10 @@ DONE
 DOING 
 
 
+- map SQL columns in traditional_data table 
+
+
+
 ----
 
 TO DO
@@ -18,13 +22,6 @@ TO DO
 - treat anual_expenditure
 - treat annual_disposable_income 
 
----
-
-- Develop model to estimate quarterly expenditure and disposable income which are in annual basis  
-- create columns in traditional_data table 
-- insert data into the tables 
-- create machine learning models for estimates 
-- feed into power bi 
 
 ----
 

@@ -1,0 +1,51 @@
+mapp traditional 
+
+---
+
+cali-annual-disposable_income.csv
+
+disposable_income : disposable_income 
+
+---
+
+cali-annual-expenditure.csv
+
+expenditure : expenditure
+
+---
+
+cali-annual-minimum_wage.csv
+
+"STTMINWGCA" : "min_wage"
+
+---
+
+cali-monthly-employment.csv
+
+"CANA" : "employment"
+---
+
+cali-monthly-exports.csv
+
+"EXPTOTCA" : "exports"
+
+---
+
+cali-monthly-imports.csv
+
+
+"IMPTOTCA" : "imports"
+
+
+---
+
+cali-quarterly-gdp.csv
+
+"CANQGSP" : "gdp" 
+
+---
+
+cali-quarterly-personal_income.csv
+
+personal_income : personal_income
+

@@ -1,0 +1,20 @@
+DONE
+
+
+DOING
+
+
+TO DO 
+
+- write table variables 
+- recreate tables with primary key in date 
+- insert data into the tables 
+- create machine learning models for estimates 
+- feed into power bi 
+
+
+---
+
+Think about:
+
+- Develop model to estimate quarterly expenditure and disposable income which are in annual basis  

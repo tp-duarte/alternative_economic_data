@@ -2,13 +2,16 @@ DONE
 
 - treat google_trends data
 - treat and query mobility_report 
+- search_1, search_2 - indicate that the search terms were filtered by the california location 
+- make dictionary to map sql_columns that will go in the table insertion 
+
 
 DOING 
 
-search_1, search_2 - indicate that the search terms were filtered by the california location 
+- make mean for daily mobility, google trends and consumer sentiment files 
+
 
 
 TO DO 
 
-
-- make dictionary to map sql_columns that will go in the table insertion 
+- INSERT data with corresponding date times of the SQL table 
