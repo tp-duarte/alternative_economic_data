@@ -90,6 +90,18 @@ def get_csv_files(path):
 
 
 def transform_to_date(data):
+    """
+    Description: Transforms the date column of a pandas DataFrame into a datetime format.
+    It also sets the date as index.
+    
+    Parameters:
+    
+    data (pd.DataFrame): A pandas DataFrame to be transformed.
+    
+    Returns:
+    
+    data (pd.DataFrame): A pandas DataFrame with date values transformed.  
+    """
     
     date_col = data.columns[0]
     data[date_col] = pd.to_datetime(data[date_col]) 
@@ -99,24 +111,41 @@ def transform_to_date(data):
     return data
 
 
-def file_in_list(target_string, string_list):
+def file_in_list(string_eval, string_list):
     """
-    Description:
+    Description: Checks if a string is contained is a list of strings.
     
     Parameters:
     
+    string_eval (str): A string to be evaluated;
+    string_list (list): A list containing strings.
+    
     Returns:
     
+    True or False (boolean): Returns if the string is contained or not in the strings list.
     """
     
     for string in string_list:
-        if target_string == string:
+        if string_eval == string:
             return True
     return False
 
 
 
 def transform_to_quarterly(data, file_name):
+    """
+    Description: Resampling of the data files of the project. This function aggregates the file
+    to a quarterly frequency, using methods that matches the necessities of the files.
+    
+    Parameters:
+    
+    data (pd.DataFrame): A pandas DataFrame to be resampled;
+    file_name (str): A string of the file being processed at the time.
+    
+    Returns:
+    
+    quarterly (pd.DataFrame): A DataFrame containing the resampled quarterly data.
+    """
     
     exports = "cali-monthly-exports.csv"
     imports = "cali-monthly-imports.csv"

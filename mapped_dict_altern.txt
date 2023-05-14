@@ -8,6 +8,8 @@ transit stations : mob_transit
 workplaces : mob_workplaces
 residential : mob_residential
 
+- OKAY
+
 ---
 
 cali-monthly-google_trends.csv
@@ -17,6 +19,8 @@ cali-monthly-google_trends.csv
 'California Paid Family Leave  PFL: (Califórnia)' : search_pfl,
 'Recession: (Califórnia)' search_recession,
  'Unemployment benefits: (Califórnia)' : search_unemp
+
+- OKAY
 
 ---
 

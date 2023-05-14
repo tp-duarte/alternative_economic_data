@@ -3,11 +3,16 @@ DONE
 
 DOING
 
+- document functions
+- map SQL columns in traditional_data table 
+
+
 
 TO DO 
 
+- treat anual_expenditure
+- treat annual_disposable_income 
 - write table variables 
-- recreate tables with primary key in date 
 - INSERT data with corresponding date times of the SQL table 
 - create machine learning models for estimates 
 - feed into power bi 
