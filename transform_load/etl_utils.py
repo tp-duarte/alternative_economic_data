@@ -205,3 +205,28 @@ def change_directory(file_path, new_directory):
     new_file_path = os.path.join(new_directory, file_name)
     
     return new_file_path
+
+
+def rename_file(file_path, new_name):
+    """
+    Renames the second part of a file path while preserving the file name and extension.
+
+    Parameters:
+        file_path (str): The original file path.
+        new_name (str): The new name to replace the second part of the file path.
+
+    Returns:
+        str: The modified file path with the same file name and extension.
+    """
+
+    directory, filename = os.path.split(file_path)
+    base_name, extension = os.path.splitext(filename)
+    name_parts = base_name.split('-')
+
+    name_parts[1] = new_name
+    new_base_name = '-'.join(name_parts)
+    new_file_name = new_base_name + extension
+    new_file_path = os.path.join(directory, new_file_name)
+
+    return new_file_path
+
