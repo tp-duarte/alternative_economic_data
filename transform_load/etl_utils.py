@@ -147,10 +147,13 @@ def transform_to_quarterly(data, file_name):
     quarterly (pd.DataFrame): A DataFrame containing the resampled quarterly data.
     """
     
+    expenditure = "cali-annual-expenditure.csv" 
     exports = "cali-monthly-exports.csv"
     imports = "cali-monthly-imports.csv"
     employment = "cali-monthly-employment.csv"
     minimum_wage = "cali-annual-minimum_wage.csv"
+    personal_income = "cali-quarterly-personal_income.csv"
+    disposable_income = "cali-annual-disposable_income.csv"
     google_trends = "cali-monthly-google_trends.csv"
     consumer_sentiment = "us-monthly-consumer_sentiment.csv"
     mobility_report = "cali-daily-mobility_report.csv"
@@ -167,7 +170,9 @@ def transform_to_quarterly(data, file_name):
         quarterly = data.resample("QS").mean()
     
     elif frequency == "AS-JAN" and file_name == minimum_wage: # 'AS' means Annual Start and 'JAN' indicates that it starts in january.
-        quarterly = data.resample("QS").ffill()     
+        quarterly = data.resample("QS").ffill()
+        
+    if frequency == "QS":
     
     return quarterly
 
