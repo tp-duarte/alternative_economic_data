@@ -4,12 +4,12 @@ CREATE TABLE traditional_data (
     date DATE PRIMARY KEY,
 	gdp NUMERIC (7, 1), 	
 	employment NUMERIC (6, 1),	
-	expenditure NUMERIC (7, 1),
+	expenditure NUMERIC (7, 3),
 	exports NUMERIC (5, 6), 
 	imports NUMERIC (5, 6),	
 	min_wage NUMERIC (2, 2),
 	personal_income NUMERIC (7, 1),
-	disposable_income NUMERIC (7, 1)	
+	disposable_income NUMERIC (7, 3)	
 );
 
 

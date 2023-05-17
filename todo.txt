@@ -1,18 +1,18 @@
 DONE
 
+- map SQL columns in traditional_data table 
+- write table variables 
+
 
 DOING
 
 - document functions
-- map SQL columns in traditional_data table 
-
+- do data treatment of annual data expenditure and disposable income 
 
 
 TO DO 
 
-- treat anual_expenditure
-- treat annual_disposable_income 
-- write table variables 
+ 
 - INSERT data with corresponding date times of the SQL table 
 - create machine learning models for estimates 
 - feed into power bi 
@@ -23,3 +23,5 @@ TO DO
 Think about:
 
 - Develop model to estimate quarterly expenditure and disposable income which are in annual basis  
+- treat anual_expenditure -  DO THIS IN ML PART
+- treat annual_disposable_income -  DO THIS IN ML PART

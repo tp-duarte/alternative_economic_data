@@ -104,6 +104,7 @@ def transform_to_date(data):
     """
     
     date_col = data.columns[0]
+    data[date_col] = data[date_col].astype(str)
     data[date_col] = pd.to_datetime(data[date_col]) 
 
     data.set_index(date_col, inplace=True)
@@ -147,32 +148,39 @@ def transform_to_quarterly(data, file_name):
     quarterly (pd.DataFrame): A DataFrame containing the resampled quarterly data.
     """
     
+    gdp = "cali-quarterly-gdp.csv"
     expenditure = "cali-annual-expenditure.csv" 
+    disposable_income = "cali-annual-disposable_income.csv"    
     exports = "cali-monthly-exports.csv"
     imports = "cali-monthly-imports.csv"
     employment = "cali-monthly-employment.csv"
     minimum_wage = "cali-annual-minimum_wage.csv"
     personal_income = "cali-quarterly-personal_income.csv"
-    disposable_income = "cali-annual-disposable_income.csv"
     google_trends = "cali-monthly-google_trends.csv"
     consumer_sentiment = "us-monthly-consumer_sentiment.csv"
     mobility_report = "cali-daily-mobility_report.csv"
 
     quarterly_agreggates = [exports, imports] 
-    quarterly_averages = [employment, google_trends, consumer_sentiment, mobility_report] 
+    quarterly_averages = [employment, google_trends, consumer_sentiment, mobility_report]
+    quarterly_disaggregates = [disposable_income, expenditure] 
     
     frequency = pd.infer_freq(data.index)
     
-    if frequency == "MS" and file_in_list(file_name, quarterly_agreggates) : # 'MS' means Month Start in pandas nomenclature
+    if frequency == "MS" and file_in_list(file_name, quarterly_agreggates): # 'MS' means Month Start in pandas nomenclature
         quarterly = data.resample("QS").sum()
     
     elif (frequency == "MS" or file_name == mobility_report) and file_in_list(file_name, quarterly_averages):
         quarterly = data.resample("QS").mean()
-    
-    elif frequency == "AS-JAN" and file_name == minimum_wage: # 'AS' means Annual Start and 'JAN' indicates that it starts in january.
-        quarterly = data.resample("QS").ffill()
         
-    if frequency == "QS":
+    elif frequency == "AS-JAN" and file_in_list(file_name, quarterly_disaggregates): # 'AS' means Annual Start and 'JAN' indicates that it starts in january.
+        quarterly = data.asfreq("QS").ffill()
+        quarterly = quarterly / 4
+        
+    elif frequency == "AS-JAN" and file_name == minimum_wage: 
+        quarterly = data.resample("QS").ffill()
+    
+    else:
+        return data
     
     return quarterly
 
