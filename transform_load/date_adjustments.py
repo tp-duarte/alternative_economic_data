@@ -2,10 +2,10 @@ import etl_utils as eu
 import os
 import pandas as pd
 
-STAGING_2_1 = DATAPATH = r"..\data\traditional_data\staging_2"
-STAGING_2_2 = DATAPATH = r"..\data\alternative_data\staging_2"
-PROCESSED_1 = DATAPATH = r"..\data\traditional_data\processed"
-PROCESSED_2 = DATAPATH = r"..\data\alternative_data\processed"
+STAGING_2_1 = r"..\alternative_economic_data\data\traditional_data\staging_2"
+STAGING_2_2 = r"..\alternative_economic_data\data\alternative_data\staging_2"
+PROCESSED_1 = r"..\alternative_economic_data\data\traditional_data\processed"
+PROCESSED_2 = r"..\alternative_economic_data\data\alternative_data\processed"
 
 trad_files = eu.get_csv_files(STAGING_2_1)
 alt_files = eu.get_csv_files(STAGING_2_2)
