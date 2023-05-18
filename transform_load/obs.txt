@@ -1,0 +1,7 @@
+The data sources for expenditure and disposable income of the California 
+state are generated in an yearly basis, but they were aggregated in the database
+in a quarterly frequency.
+
+This won't catch seasonalities and it's a warning sign to the ML process step.
+Since the data was generated after the GDP we also have to estimate it partially when making 
+predictions intead of using it directly from the database. This way we don't incurr in data leakage.  

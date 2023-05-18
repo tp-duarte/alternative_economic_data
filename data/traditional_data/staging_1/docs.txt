@@ -1,4 +1,4 @@
-The following files were manually treated:
+The following files were manually pre-treated:
 
 - Disposable Income 
 - Personal Income
