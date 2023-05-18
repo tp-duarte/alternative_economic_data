@@ -132,7 +132,6 @@ def file_in_list(string_eval, string_list):
     return False
 
 
-
 def transform_to_quarterly(data, file_name):
     """
     Description: Resampling of the data files of the project. This function aggregates the file
@@ -243,3 +242,56 @@ def rename_file(file_path, new_name):
 
     return new_file_path
 
+
+def get_numeric_scale(cursor, table_name):
+    """
+    Description: This function produces a dictionary mapping of SQL NUMERIC column names and their decimal scale.
+    
+    Parameters:
+    
+    cursor (psycopg2.cursor): A Postgres cursor to execute the statement;
+    table_name (str): A string containing the name of the table to make the mapping.
+    
+    Returns:
+    
+    mapping (dict): A dictionary containing sql columns as keys and their numeric scale as values. 
+    """
+    
+    sql_query = "SELECT column_name, numeric_scale FROM information_schema.columns " \
+                f"WHERE table_name = '{table_name}'"
+    
+    cursor.execute(sql_query)
+    result = cursor.fetchall()
+    
+    mapping = {}
+    
+    for var in mapping:
+        var_name = var[0]
+        var_scale = var[1]
+        mapping[var_name] = var_scale
+    
+    return mapping
+
+
+def apply_rounding(mapping_dict, data, cursor, table_name):
+    """
+    Description: Applies a rounding in float columns of a dataframe accordingly to the format of the SQL table
+    provided.
+    
+    Parameters:
+    
+    mapping_dict (dict): A mapping dictionary with datframe to sql columns; 
+    data (pd.DataFrame): A pandas dataframe to apply the function;
+    cursor (psycopg2.cursor): A Postgres cursor for the operation;
+    table_name (str): A string containing the name of the table of the desired numeric scale.
+    """
+    
+    inverted_dict = {value: key for key, value in mapping_dict.items()}    
+    cols_to_round = get_numeric_scale(cursor, table_name)
+
+    for col, decimal_place in cols_to_round:
+        
+        df_col = inverted_dict[col]
+        data[df_col] = data[df_col].round(decimal_place)
+    
+    return data

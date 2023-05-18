@@ -21,11 +21,12 @@ df_sql = {
     "CANQGSP": "gdp",
     "personal_income": "personal_income", 
     "retail and recreation": "mob_leisure",
+    "parks": "mob_parks",    
     "grocery and pharmacy": "mob_groc_pharm",
     "transit stations": "mob_transit",
     "workplaces": "mob_workplaces",
     "residential": "mob_residential",
-    "Housing bubble" : "search_hous_bubble",
+    "Housing bubble: (Califórnia)" : "search_hous_bubble",
     "pandemic unemployment assistance california: (Califórnia)": "search_pand_assist",
     "California Paid Family Leave  PFL: (Califórnia)": "search_pfl",
     "Recession: (Califórnia)": "search_recession",
@@ -63,29 +64,38 @@ for file in all_files:
 
     df_vars = [column for column in df.columns if column in df_sql.keys()]
     sql_vars = [df_sql[column] for column in df.columns if column in df_sql]
-
+    
     condition_1 = all(var in trad_dict for var in df_vars)
     condition_2 = all(var in alt_dict for var in df_vars)
     
     if condition_1 or condition_2:
         table_name = TRAD_TABLE_NAME if condition_1 else ALT_TABLE_NAME
-    
+        
+        df = eu.apply_rounding(df_sql, df, cursor, table_name)
+
         for date_value in date_values:
             
             date_value = date_value[0]
             date_col = df.columns[0]
             df[date_col] = pd.to_datetime(df[date_col], format='%Y-%m-%d')
             filtered_df = df.query(f"{date_col} == '{date_value}'")
-
+            
+            if filtered_df.empty:
+                continue
+            
             try:
-                values = [filtered_df[column][0] for column in df_vars]
+                values = [filtered_df[column].to_list()[0] for column in df_vars]
+                values = tuple(values)
                 
-                query = f"INSERT INTO {table_name} ({', '.join(sql_vars)}) " \
-                        f"VALUES ({', '.join(['%s' for _ in df_vars])})"
+                set_clause = ', '.join([f"{column} = %s" for column in sql_vars]) # output example : column_1 = %s, column_2 = %s, ....  
+                
+                query = f"UPDATE {table_name} " \
+                        f"SET {set_clause} " \
+                        f"WHERE date = '{date_value}'; " 
                 
                 cursor.execute(query, values)
                 connection.commit()
 
             except (Exception, psycopg2.Error) as error:
                 connection.rollback()  # Roll back the transaction
-                print("Error while inserting", error, values)
+                print("Error while inserting", error, values, file)
