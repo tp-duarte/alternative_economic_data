@@ -1,0 +1,1 @@
+pg_dump -U postgres -d california -p 5433 > D:\articles\alternative_economic_data\sql\california_db.sql
