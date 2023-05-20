@@ -2,18 +2,22 @@ DONE
 
 - map SQL columns in traditional_data table 
 - write table variables 
+- INSERT data with corresponding date times of the SQL table 
+- document functions
 
 
 DOING
 
-- document functions
+- Create table with gdp and alternative variables - train model with alternative data 
+- Create table with all data  - train model with alternative data 
+
 - do data treatment of annual data expenditure and disposable income 
 
 
 TO DO 
 
  
-- INSERT data with corresponding date times of the SQL table 
+
 - create machine learning models for estimates 
 - feed into power bi 
 

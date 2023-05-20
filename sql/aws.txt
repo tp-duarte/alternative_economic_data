@@ -1,0 +1,6 @@
+user : postgres
+password : 24567811
+
+---
+
+azure : ix9u8FCE@9TDMyz
