@@ -1,89 +1,31 @@
-#!/usr/bin/env python
-# coding: utf-8
+'''
+Objective:
 
-# In[14]:
+This python file trains Automated Machine Learning models based on alternative and traditional economic 
+data.
+
+The file proceeds as following:
+    1 - Gathers data from AWS Relational DataBase Service (RDS);
+    2 - Trains three main Automated ML Models from the gathered data;
+    3 - Exports the models predictions and metrics (RMSE, MAE, R2) to a specified path.
+
+
+The predictions and metrics are displayed by Power BI .  
+
+'''
 
 
 import h2o
 from h2o.automl import H2OAutoML
 import psycopg2
 import pandas as pd
+import numpy as np
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import ml_utils as mu
 
+SEED = 4875
 
-# In[48]:
-
-
-def query_into_df(query, cursor):
-	"""
-
-	Description: This function loads a SQL query into a pandas DataFrame.
-
-	Parameters:
-
-	table_name (str): A string containing the name of the table to be retrieved;
-	cursor (database cursor): A cursor to make a connection with the database.
-
-	"""
-
-	cursor.execute(query)
-	result = cursor.fetchall()
-	column_names = [desc[0] for desc in cursor.description]
-
-	df = pd.DataFrame(result, columns=column_names)
-
-	return df
-
-
-# In[117]:
-
-
-def add_suffix_to_duplicates(lst):
-    frequency = {}
-    result = []
-    for item in lst:
-        if item in frequency:
-            frequency[item] += 1
-            item_with_suffix = item + "_dupplicated_" + str(frequency[item])
-            result.append(item_with_suffix)
-        else:
-            frequency[item] = 0
-            result.append(item)
-    return result
-
-# Example usage
-my_list = ['apple', 'orange', 'banana', 'apple', 'apple', 'banana']
-suffix = '_dup'
-result_list = add_suffix_to_duplicates(my_list,)
-print(result_list)
-
-
-# In[118]:
-
-
-def query_into_h2o(query, cursor):
-    """
-
-    Description: This function loads a SQL query into a pandas DataFrame.
-
-    Parameters:
-
-    table_name (str): A string containing the name of the table to be retrieved;
-    cursor (database cursor): A cursor to make a connection with the database.
-
-    """
-
-    cursor.execute(query)
-    result = cursor.fetchall()
-
-    column_names = [desc[0] for desc in cursor.description]
-    column_names = add_suffix_to_duplicates(column_names)
-
-    df = h2o.H2OFrame(result, column_names=column_names)
-
-    return df
-
-
-# In[84]:
+h2o.init()
 
 
 try:
@@ -102,25 +44,25 @@ except psycopg2.Error as e:
     print("Error connecting to the database:", e)
 
 
-# In[119]:
-
-
-query_trad_data = "SELECT trad.* "                   "FROM traditional_data AS trad"
+query_trad_data = "SELECT trad.* " \
+                  "FROM traditional_data AS trad"
                  
-query_alt_data = "SELECT alt.*, trad.gdp "                  "FROM traditional_data AS trad "                  "JOIN alternative_data AS alt ON trad.date = alt.date"
+query_alt_data = "SELECT alt.*, trad.gdp " \
+                 "FROM traditional_data AS trad " \
+                 "JOIN alternative_data AS alt ON trad.date = alt.date"
 
-query_all_data = "SELECT trad.*, alt.* "                  "FROM traditional_data AS trad "                  "FULL OUTER JOIN alternative_data AS alt "                  "ON trad.date = alt.date"
-
-traditional_data = query_into_h2o(query_trad_data, cursor)
-alternative_data = query_into_h2o(query_alt_data, cursor)
-all_data = query_into_h2o(query_all_data, cursor)
+query_all_data = "SELECT trad.*, alt.* " \
+                 "FROM traditional_data AS trad " \
+                 "FULL OUTER JOIN alternative_data AS alt " \
+                 "ON trad.date = alt.date"
+                 
+                 
+traditional_data = mu.query_into_h2o(query_trad_data, cursor)
+alternative_data = mu.query_into_h2o(query_alt_data, cursor)
+all_data = mu.query_into_h2o(query_all_data, cursor)
 all_data = all_data.drop("date_dupplicated_1")
 
 db.close() # don't want to kill your finances in aws haha
-
-
-# In[123]:
-
 
 # sorting data frames 
 
@@ -128,171 +70,127 @@ traditional_data = traditional_data.sort(by='date')
 alternative_data = alternative_data.sort(by='date')
 all_data = all_data.sort(by='date')
 
-
-# 
-# <br>
-# 
-# ### Predicting Expenditure and disposable Income 
-# 
-# <br>
-
-# Expenditure:
-# 
-# - Remove GDP and disp_inc
-# 
-# Disp Income:
-# 
-# - Remove GDP and expenditure
-
-# In[139]:
+ 
+#### Predicting Expenditure and disposable Income 
 
 
-traditional_data.t
+## Expenditure data
 
-
-# In[136]:
-
-
-
-
-
-# Create train and test data based on split time and columns to drop
-
-# In[ ]:
-
-
-def data_split(split_time):
-    """
-    Description:
-    """
-
-
-# In[137]:
-
-
-## Expenditure 
-
-# Decide on a point where you want to split the data
-split_time = pd.to_datetime("2019-01-01")
-
-
-# Create training and test sets
-train = traditional_data[traditional_data["date"] <  split_time]
-test = traditional_data[traditional_data["date"] >=  split_time]
-
-
-# In[138]:
-
-
+split_date = "2019-01-01"
 drop_from_expend = ["gdp", "disposable_income", "expenditure"]
 
-features = train.columns
-features = [feature_col for feature_col in features if feature_col not in drop_from_expend]
+train_expend, test_expend, features_expend, expend = mu.data_split(split_date, traditional_data, drop_from_expend, "expenditure")
 
-target = "expenditure"
+# Initializing and training model 
 
+expendt_model = H2OAutoML(max_runtime_secs=3600, seed=SEED)
+expendt_model.train(x=features_expend, y=expend, training_frame=train_expend)
 
-# In[36]:
+# Predictions  
 
-
-expendt_model = H2OAutoML(max_runtime_secs=120)
-
-
-# In[37]:
+predictions_expend = expendt_model.predict(test_expend[features_expend])
 
 
-expendt_model.train(x=features, y=target, training_frame=train)
+## Disposable Income 
+
+drop_from_disp = ["gdp", "disposable_income", "expenditure"]
+
+train_disp, test_disp, features_disp, disp = mu.data_split(split_date, traditional_data, drop_from_disp, "disposable_income")
+
+# Initializing and training model 
+
+disp_model = H2OAutoML(max_runtime_secs=3600, seed=SEED)
+disp_model.train(x=features_disp, y=disp, training_frame=train_disp)
+
+# Predictions  
+
+predictions_disp = disp_model.predict(test_disp[features_disp])
 
 
-# In[39]:
+#### Traditional Data
 
 
-predictions = expendt_model.predict(test[features])
-predictions
+drop_from_trad = ["gdp"]
+
+train_trad, test_trad, features_trad, gdp = mu.data_split(split_date, traditional_data, drop_from_trad, "gdp")
+
+# replacing expenditure and disposable income data in the test 
+
+test_trad["expenditure"] = predictions_expend
+test_trad["disposable_income"] = predictions_disp
+
+# Initializing and training model 
+
+trad_model = H2OAutoML(max_runtime_secs=3600, seed=SEED)
+trad_model.train(x=features_trad, y=gdp, training_frame=train_trad)
+
+# Predictions  
+
+predictions_trad = trad_model.predict(test_trad[features_trad])
 
 
-# In[40]:
+#### Alternative Data
 
 
-test["expenditure"]
+drop_from_alt = ["gdp"]
+
+train_alt, test_alt, features_alt, gdp = mu.data_split(split_date, alternative_data, drop_from_alt, "gdp")
 
 
-# In[ ]:
+# Initializing and training model 
+
+alt_model = H2OAutoML(max_runtime_secs=3600, seed=SEED)
+alt_model.train(x=features_alt, y=gdp, training_frame=train_alt)
+
+# Predictions  
+
+predictions_alt = alt_model.predict(test_alt[features_alt])
 
 
-## Disp Income 
+#### All Data
 
-# Suppose 'time' is your time column and df is your DataFrame
-traditional_data = traditional_data.sort_values('date')
+drop_from_all = ["gdp"]
 
-# Decide on a point where you want to split the data
-split_time = "01-01-2019"
+train_all, test_all, features_all, gdp = mu.data_split(split_date, all_data, drop_from_all, "gdp")
 
-# Create training and test sets
-train = df_sorted[df_sorted['time'] < split_time]
-test = df_sorted[df_sorted['time'] >= split_time]
+# replacing expenditure and disposable income data in the test 
 
-# Get the features X and labels y for both sets
-X_train, y_train = train.drop('target', axis=1), train['target']
-X_test, y_test = test.drop('target', axis=1), test['target']
+test_all["expenditure"] = predictions_expend
+test_all["disposable_income"] = predictions_disp
 
+# Initializing and training model 
 
-# In[ ]:
+all_model = H2OAutoML(max_runtime_secs=3600, seed=SEED)
+all_model.train(x=features_all, y=gdp, training_frame=train_all)
 
+# Predictions  
 
-## Traditional Data
-
-# Suppose 'time' is your time column and df is your DataFrame
-traditional_data = traditional_data.sort_values('date')
-
-# Decide on a point where you want to split the data
-split_time = "01-01-2019"
-
-# Create training and test sets
-train = df_sorted[df_sorted['time'] < split_time]
-test = df_sorted[df_sorted['time'] >= split_time]
-
-# Get the features X and labels y for both sets
-X_train, y_train = train.drop('target', axis=1), train['target']
-X_test, y_test = test.drop('target', axis=1), test['target']
+predictions_all = all_model.predict(test_all[features_all])
 
 
-# In[ ]:
+#### EXPORTING RESULTS ####  
+  
+
+models = ["trad_model", "alt_model", "all_model"]
+predictions = [predictions_trad, predictions_alt, predictions_all]
+actual_gdp = test_all["gdp"]
+
+models_metrics = mu.display_metrics(models, actual_gdp, predictions)
 
 
-## Alternative Data  
+flattened_dict = {
+    "real_gdp": test_all["gdp"].as_data_frame(),
+    "trad_predictions": predictions_trad.as_data_frame(),
+    "alt_predictions": predictions_alt.as_data_frame(),
+    "all_predictions": predictions_all.as_data_frame()
+}
 
-# Suppose 'time' is your time column and df is your DataFrame
-traditional_data = traditional_data.sort_values('date')
-
-# Decide on a point where you want to split the data
-split_time = "01-01-2019"
-
-# Create training and test sets
-train = df_sorted[df_sorted['time'] < split_time]
-test = df_sorted[df_sorted['time'] >= split_time]
-
-# Get the features X and labels y for both sets
-X_train, y_train = train.drop('target', axis=1), train['target']
-X_test, y_test = test.drop('target', axis=1), test['target']
+prediction_results = pd.concat(flattened_dict.values(), axis=1, keys=flattened_dict.keys())
+prediction_results.columns = prediction_results.columns.get_level_values(0)
 
 
-# In[ ]:
+prediction_file = "..\data\ml_data\predictions.csv"
+metrics_file = "..\data\ml_data\models_metrics.csv"
 
-
-## All Data  
-
-# Suppose 'time' is your time column and df is your DataFrame
-traditional_data = traditional_data.sort_values('date')
-
-# Decide on a point where you want to split the data
-split_time = "01-01-2019"
-
-# Create training and test sets
-train = df_sorted[df_sorted['time'] < split_time]
-test = df_sorted[df_sorted['time'] >= split_time]
-
-# Get the features X and labels y for both sets
-X_train, y_train = train.drop('target', axis=1), train['target']
-X_test, y_test = test.drop('target', axis=1), test['target']
-
+prediction_results.to_csv(prediction_file, index=False)
+models_metrics.to_csv(metrics_file)
