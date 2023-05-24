@@ -4,3 +4,4 @@ password : 24567811
 ---
 
 azure : ix9u8FCE@9TDMyz
+github_token: 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

@@ -265,7 +265,7 @@ def get_numeric_scale(cursor, table_name):
     
     mapping = {}
     
-    for var in mapping:
+    for var in result:
         var_name = var[0]
         var_scale = var[1]
         mapping[var_name] = var_scale
