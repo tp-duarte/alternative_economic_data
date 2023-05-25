@@ -6,7 +6,7 @@ data.
 
 The file proceeds as following:
     1 - Gathers data from AWS Relational DataBase Service (RDS);
-    2 - Trains three main Automated ML Models from the gathered data;
+    2 - Trains three main Automated ML Models from the gathered data;py
     3 - Exports the models predictions and metrics (RMSE, MAE, R2) to a specified path.
 
 
@@ -25,8 +25,7 @@ import ml_utils as mu
 
 SEED = 4875
 
-h2o.init()
-
+h2o.init(max_mem_size = "4g")
 
 try:
     db = psycopg2.connect(
@@ -62,7 +61,7 @@ alternative_data = mu.query_into_h2o(query_alt_data, cursor)
 all_data = mu.query_into_h2o(query_all_data, cursor)
 all_data = all_data.drop("date_dupplicated_1")
 
-db.close() # don't want to kill your finances in aws haha
+db.close() 
 
 # sorting data frames 
 
@@ -71,10 +70,10 @@ alternative_data = alternative_data.sort(by='date')
 all_data = all_data.sort(by='date')
 
  
-#### Predicting Expenditure and disposable Income 
+#### Predicting Expenditure and disposable Income ####
 
 
-## Expenditure data
+## Expenditure data ###
 
 split_date = "2019-01-01"
 drop_from_expend = ["gdp", "disposable_income", "expenditure"]
@@ -89,9 +88,10 @@ expendt_model.train(x=features_expend, y=expend, training_frame=train_expend)
 # Predictions  
 
 predictions_expend = expendt_model.predict(test_expend[features_expend])
+del expendt_model
 
 
-## Disposable Income 
+## Disposable Income  ##
 
 drop_from_disp = ["gdp", "disposable_income", "expenditure"]
 
@@ -105,9 +105,9 @@ disp_model.train(x=features_disp, y=disp, training_frame=train_disp)
 # Predictions  
 
 predictions_disp = disp_model.predict(test_disp[features_disp])
+del disp_model
 
-
-#### Traditional Data
+#### Traditional Data ####
 
 
 drop_from_trad = ["gdp"]
@@ -127,9 +127,10 @@ trad_model.train(x=features_trad, y=gdp, training_frame=train_trad)
 # Predictions  
 
 predictions_trad = trad_model.predict(test_trad[features_trad])
+del trad_model
 
 
-#### Alternative Data
+#### Alternative Data ####
 
 
 drop_from_alt = ["gdp"]
@@ -145,9 +146,9 @@ alt_model.train(x=features_alt, y=gdp, training_frame=train_alt)
 # Predictions  
 
 predictions_alt = alt_model.predict(test_alt[features_alt])
+del alt_model
 
-
-#### All Data
+#### All Data ####
 
 drop_from_all = ["gdp"]
 
@@ -166,7 +167,7 @@ all_model.train(x=features_all, y=gdp, training_frame=train_all)
 # Predictions  
 
 predictions_all = all_model.predict(test_all[features_all])
-
+del all_model
 
 #### EXPORTING RESULTS ####  
   
@@ -179,6 +180,7 @@ models_metrics = mu.display_metrics(models, actual_gdp, predictions)
 
 
 flattened_dict = {
+    "date": mu.generate_quarterly_series(split_date, "2022-10-01"),        
     "real_gdp": test_all["gdp"].as_data_frame(),
     "trad_predictions": predictions_trad.as_data_frame(),
     "alt_predictions": predictions_alt.as_data_frame(),
@@ -186,7 +188,7 @@ flattened_dict = {
 }
 
 prediction_results = pd.concat(flattened_dict.values(), axis=1, keys=flattened_dict.keys())
-prediction_results.columns = prediction_results.columns.get_level_values(0)
+prediction_results.columns = prediction_results .columns.get_level_values(0)
 
 
 prediction_file = "..\data\ml_data\predictions.csv"

@@ -36,6 +36,32 @@ def add_suffix_to_duplicates(lst):
     return result
 
 
+def query_into_df(query, cursor):
+    """
+
+    Description: This function loads a SQL query into a pandas DataFrame.
+
+    Parameters:
+
+        table_name (str): A string containing the name of the table to be retrieved;
+        cursor (database cursor): A cursor to make a connection with the database.
+    
+    Returns:    
+
+        pandas.DataFrame: A dataframe containing the queried data.
+
+    """
+
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    column_names = [desc[0] for desc in cursor.description]
+
+    df = pd.DataFrame(result, columns=column_names)
+
+    return df
+
+
 def query_into_h2o(query, cursor):
     """
 
@@ -146,3 +172,23 @@ def display_metrics(models, actual_values, predicted_values):
     df = pd.DataFrame.from_dict(results, orient='index')
     
     return df
+
+def generate_quarterly_series(start_date, end_date):
+    """
+    Description: This function generates a quarterly time series between the specified start and end dates.
+
+    Parameters:
+        start_date (str): A string representing the start date in the format 'YYYY-MM-DD'.
+        end_date (str): A string representing the end date in the format 'YYYY-MM-DD'.
+
+    Returns:
+        pandas.Series: A series object containing the quarterly time series.
+    """
+
+    # Generate a DatetimeIndex with quarterly frequency
+    dates = pd.date_range(start=start_date, end=end_date, freq='QS')
+
+    # Create a pandas Series with the quarterly time series
+    quarterly_series = pd.Series(dates)
+
+    return quarterly_series
