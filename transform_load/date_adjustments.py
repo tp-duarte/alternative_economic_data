@@ -1,3 +1,18 @@
+'''
+Objective:
+
+This python file adjusts the date time format of files that will be consumed
+in the tables. It applies transformations to each one of the files to a quarterly 
+frequency accordingly to the business rule.
+
+The file proceeds as following:
+    1 - Gathers data from the staging area;
+    2 - Applies date time transformations in the file;
+    3 - Applies frequency aggregation/disaggregation to the files;
+    4 - Exports data to the processed files folder.
+
+'''
+
 import etl_utils as eu
 import os
 import pandas as pd

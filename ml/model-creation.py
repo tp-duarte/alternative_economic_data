@@ -6,11 +6,11 @@ data.
 
 The file proceeds as following:
     1 - Gathers data from AWS Relational DataBase Service (RDS);
-    2 - Trains three main Automated ML Models from the gathered data;py
+    2 - Trains three main Automated ML Models from the gathered data;
     3 - Exports the models predictions and metrics (RMSE, MAE, R2) to a specified path.
 
 
-The predictions and metrics are displayed by Power BI .  
+The predictions and metrics are then consumed and displayed in Power BI .  
 
 '''
 

@@ -1,3 +1,21 @@
+'''
+Objective:
+
+This python module contains functions that are used in the ETL steps of the project.
+It enables the ETL in the following files:
+
+- general_treatments.py
+- date_adjustments.py
+- inserting_data.py
+
+The module contains functions for:
+
+- Folder and operational system procedures;
+- File's encoding and delimiters detection;
+- Date aggregations and transformations. 
+
+'''
+
 import chardet as ct
 import glob
 import os
@@ -10,11 +28,12 @@ def detect_delimiter(file_path):
 
 	Parameters:
 
-	file_path (str): A string containing the file path. Preferrably the path is specified with two backslashs.
+        file_path (str): A string containing the file path. Preferrably the path is specified with two backslashs.
 
 	Returns:
 
-	best_delimiter (str): A string containing the best delimiter.
+        best_delimiter (str): A string containing the best delimiter.
+        
 	"""
 
     # Open the file and read the first few lines
@@ -43,11 +62,12 @@ def encoding_detect(data_path):
 
 	Parameters:
 
-	data_path (str): A string containing the path of the data, preferrably with two backslashs for each folder.
+        data_path (str): A string containing the path of the data, preferrably with two backslashs for each folder.
 
     Returns:
     
-    encoding (str): A string containing the encoding of the file
+        encoding (str): A string containing the encoding of the file
+    
 	"""
 	with open(data_path, 'rb') as f:
 		lines = []
@@ -68,11 +88,11 @@ def get_csv_files(path):
     
     Parameters:
     
-    path (str): A string containing the path of the data.
+        path (str): A string containing the path of the data.
     
     Returns:
     
-    csv_files (list): A list containing the path of each csv file.
+        csv_files (list): A list containing the path of each csv file.
     """
     csv_files = []
     
@@ -96,11 +116,12 @@ def transform_to_date(data):
     
     Parameters:
     
-    data (pd.DataFrame): A pandas DataFrame to be transformed.
+        data (pd.DataFrame): A pandas DataFrame to be transformed.
     
     Returns:
     
-    data (pd.DataFrame): A pandas DataFrame with date values transformed.  
+        data (pd.DataFrame): A pandas DataFrame with date values transformed.  
+        
     """
     
     date_col = data.columns[0]
@@ -118,12 +139,13 @@ def file_in_list(string_eval, string_list):
     
     Parameters:
     
-    string_eval (str): A string to be evaluated;
-    string_list (list): A list containing strings.
+        string_eval (str): A string to be evaluated;
+        string_list (list): A list containing strings.
     
     Returns:
     
-    True or False (boolean): Returns if the string is contained or not in the strings list.
+        True or False (boolean): Returns if the string is contained or not in the strings list.
+        
     """
     
     for string in string_list:
@@ -139,12 +161,13 @@ def transform_to_quarterly(data, file_name):
     
     Parameters:
     
-    data (pd.DataFrame): A pandas DataFrame to be resampled;
-    file_name (str): A string of the file being processed at the time.
+        data (pd.DataFrame): A pandas DataFrame to be resampled;
+        file_name (str): A string of the file being processed at the time.
     
     Returns:
     
-    quarterly (pd.DataFrame): A DataFrame containing the resampled quarterly data.
+        quarterly (pd.DataFrame): A DataFrame containing the resampled quarterly data.
+        
     """
     
     gdp = "cali-quarterly-gdp.csv"
@@ -249,12 +272,13 @@ def get_numeric_scale(cursor, table_name):
     
     Parameters:
     
-    cursor (psycopg2.cursor): A Postgres cursor to execute the statement;
-    table_name (str): A string containing the name of the table to make the mapping.
+        cursor (psycopg2.cursor): A Postgres cursor to execute the statement;
+        table_name (str): A string containing the name of the table to make the mapping.
     
     Returns:
     
-    mapping (dict): A dictionary containing sql columns as keys and their numeric scale as values. 
+        mapping (dict): A dictionary containing sql columns as keys and their numeric scale as values. 
+        
     """
     
     sql_query = "SELECT column_name, numeric_scale FROM information_schema.columns " \
@@ -280,10 +304,15 @@ def apply_rounding(mapping_dict, data, cursor, table_name):
     
     Parameters:
     
-    mapping_dict (dict): A mapping dictionary with datframe to sql columns; 
-    data (pd.DataFrame): A pandas dataframe to apply the function;
-    cursor (psycopg2.cursor): A Postgres cursor for the operation;
-    table_name (str): A string containing the name of the table of the desired numeric scale.
+        mapping_dict (dict): A mapping dictionary with datframe to sql columns; 
+        data (pd.DataFrame): A pandas dataframe to apply the function;
+        cursor (psycopg2.cursor): A Postgres cursor for the operation;
+        table_name (str): A string containing the name of the table of the desired numeric scale.
+    
+    Returns:
+    
+        data (pd.DataFrame): A pandas dataframe with the rounded data.
+
     """
     
     inverted_dict = {value: key for key, value in mapping_dict.items()}    

@@ -1,3 +1,20 @@
+'''
+Objective:
+
+This python file inserts data from files to the SQL tables traditional_data and alternative_data.
+
+The file proceeds as following:
+    1 - Gathers data from the processed area;
+    2 - Makes a mapping of pandas.DataFrame and SQL columns through dictionaries;
+    3 - Checks which table the data must go to;
+    4 - Inserts new data via the UPDATE* clause.
+
+
+* There already is a date column with values in the table. So that's why we use the UPDATE
+instead of the INSERT command.  
+
+'''
+
 import etl_utils as eu
 import pandas as pd 
 import psycopg2

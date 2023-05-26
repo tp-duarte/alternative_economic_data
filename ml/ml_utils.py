@@ -1,3 +1,15 @@
+'''
+Objective:
+
+This python module contains functions that are be used for the ML steps of the project.
+It enables the ML training by:
+
+- Loading SQL queries into h2o frames that are used for the training; 
+- Splitting data into train and test;
+- Metrics calculation of models performance. 
+
+'''
+
 import h2o
 from h2o.automl import H2OAutoML
 import psycopg2
@@ -43,7 +55,7 @@ def query_into_df(query, cursor):
 
     Parameters:
 
-        table_name (str): A string containing the name of the table to be retrieved;
+        query (str): A string containing the sql query to be retrieved;
         cursor (database cursor): A cursor to make a connection with the database.
     
     Returns:    
@@ -69,7 +81,7 @@ def query_into_h2o(query, cursor):
 
     Parameters:
 
-        table_name (str): A string containing the name of the table to be retrieved;
+        query (str): A string containing the sql query to be retrieved;
         cursor (database cursor): A cursor to make a connection with the database.
     
     Returns:    
