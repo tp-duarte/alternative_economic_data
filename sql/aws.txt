@@ -1,0 +1,11 @@
+aws
+
+user : postgres
+password : 24567811
+
+---
+
+azure
+
+user : postgres
+password : ix9u8FCE@9TDMyz
