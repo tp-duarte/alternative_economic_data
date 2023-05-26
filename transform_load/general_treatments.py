@@ -1,6 +1,15 @@
-import etl_utils as eu
-import pandas as pd 
-import os
+'''
+Objective:
+
+This python file treats data for the date_adjustment.py file.
+
+The file does tasks such as:
+
+    1 - Queries data for the California context;
+    2 - Replacement of odd values in the files.
+
+'''
+
 
 STAGING_1_1 = r"..\data\traditional_data\staging_1"
 STAGING_1_2 = r"..\data\alternative_data\staging_1"
