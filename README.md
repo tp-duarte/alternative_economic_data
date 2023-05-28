@@ -6,7 +6,7 @@
 
 <br>
 
-Hi! This project creates predictions of California - USA Gross Domestic Product (GDP) in the pandemic period using traditional and alternative data. The main goal is to test out if alternative data sources could be something to turn to. 
+Hi! This project creates predictions of California - USA Gross Domestic Product (GDP) in the pandemic period using traditional and alternative data. The main goal is to test out if alternative data sources could be something to turn to make better GDP predictions. 
 
 Knowing that, this project gathered traditional data that contains:
 
@@ -35,3 +35,5 @@ The results are displayed as you can see above. One of the problems with the pro
 are constraints with models reproducibility that weren't tackled here. 
 
 But Nonetheless, the results might be a clue that you need to have a wide range of alternative sources to compare with traditional ones when training ML models. And that might also not be an out of the box sollution since we aren't necessarily talking about governamental institutions.  
+
+For a more detailed commentary of the project you can access it's Medium article here.
