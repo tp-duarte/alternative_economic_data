@@ -32,7 +32,7 @@ that considered:
 - All data sources.
 
 The results are displayed as you can see above. One of the problems with the project is that, with the use of AutoML there
-are constraints with models reproducibility that weren't tackled here. 
+are constraints with models reproducibility that weren't tackled. 
 
 But Nonetheless, the results might be a clue that you need to have a wide range of alternative sources to compare with traditional ones when training ML models. And that might also not be an out of the box sollution since we aren't necessarily talking about governamental institutions.  
 
