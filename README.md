@@ -1,6 +1,5 @@
 
-
-
+![image](https://github.com/tp-duarte/alternative_economic_data/assets/69936708/5efb3190-9fb4-4a97-8d9b-75de74a7a56d)
 
 
 ### Description 🏖️
