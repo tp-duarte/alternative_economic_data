@@ -36,4 +36,4 @@ are constraints with models reproducibility that weren't tackled.
 
 But Nonetheless, the results might be a clue that you need to have a wide range of alternative sources to compare with traditional ones when training ML models. And that might also not be an out of the box sollution since we aren't necessarily talking about governamental institutions.  
 
-For a more detailed commentary of the project you can access it's Medium article here.
+For a more detailed commentary of the project you can access it's Medium article **here**. And the results in [**PowerBI**](https://app.powerbi.com/view?r=eyJrIjoiZGQwMzJmYjgtOGJjNC00OGE1LTlkY2UtMzllNTFkNGZlODNkIiwidCI6ImZlODc4N2JjLWM5MTQtNDY2NS04NTQ3LTI2OGUxNWNiMGQ5YSJ9&embedImagePlaceholder=true)
