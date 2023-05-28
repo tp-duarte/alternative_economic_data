@@ -1,4 +1,0 @@
-brown - #6F4820
-red - #BF2C17
-green - #186706
-dark gray - #1F1D1C
