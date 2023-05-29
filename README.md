@@ -1,5 +1,5 @@
 
-<img src="https://github.com/tp-duarte/alternative_economic_data/assets/69936708/74ac7f56-e725-42c0-b2d8-b9d6ea3b66dc" alt="image" width="300">
+<img src="https://github.com/tp-duarte/alternative_economic_data/assets/69936708/74ac7f56-e725-42c0-b2d8-b9d6ea3b66dc" alt="image" width="600">
 
 
 ### Description 🏖️
